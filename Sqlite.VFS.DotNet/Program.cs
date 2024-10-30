@@ -78,7 +78,7 @@ namespace Sqlite.VFS.DotNet
         private static void RunDbTest()
         {
             Console.WriteLine($"Creating file at {Directory.GetCurrentDirectory()}");
-            using SqliteConnection connection = new SqliteConnection("Data Source=file:test.sqlite?vfs=my-custom-vfs");
+            using SqliteConnection connection = new SqliteConnection("Data Source=file:test.sqlite?vfs=my-custom-vfs&mode=rwc");
             connection.Open();
 
             int result;

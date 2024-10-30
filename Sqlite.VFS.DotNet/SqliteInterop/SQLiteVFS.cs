@@ -6,25 +6,25 @@ namespace Sqlite.VFS.DotNet.SQLiteInterop;
 public class SQLiteVFSDelegates
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int xOpenDelegate(IntPtr vfs, string zName, IntPtr file, int flags, IntPtr pOutFlags);
+    public delegate int xOpenDelegate(IntPtr vfs, IntPtr zName, IntPtr file, int flags, IntPtr pOutFlags);
     
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int xDeleteDelegate(IntPtr vfs, string zName, int syncDir);
+    public delegate int xDeleteDelegate(IntPtr vfs, IntPtr zName, int syncDir);
     
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int xAccessDelegate(IntPtr vfs, string zName, int flags, IntPtr pResOut);
+    public delegate int xAccessDelegate(IntPtr vfs, IntPtr zName, int flags, IntPtr pResOut);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int xFullPathnameDelegate(IntPtr vfs, string zName, int nOut, IntPtr zOut);
+    public delegate int xFullPathnameDelegate(IntPtr vfs, IntPtr zName, int nOut, IntPtr zOut);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr xDlOpenDelegate(IntPtr vfs, string zFilename);
+    public delegate IntPtr xDlOpenDelegate(IntPtr vfs, IntPtr zFilename);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void xDlErrorDelegate(IntPtr vfs, int nByte, IntPtr zErrMsg);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr xDlSymDelegate(IntPtr vfs, IntPtr p, string zSymbol);
+    public delegate IntPtr xDlSymDelegate(IntPtr vfs, IntPtr p, IntPtr zSymbol);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void xDlCloseDelegate(IntPtr vfs, IntPtr p);
@@ -45,13 +45,13 @@ public class SQLiteVFSDelegates
     public delegate int xCurrentTimeInt64Delegate(IntPtr vfs, IntPtr pOut);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int xSetSystemCallDelegate(IntPtr vfs, string zName, IntPtr syscallPtr);
+    public delegate int xSetSystemCallDelegate(IntPtr vfs, IntPtr zName, IntPtr syscallPtr);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr xGetSystemCallDelegate(IntPtr vfs, string zName);
+    public delegate IntPtr xGetSystemCallDelegate(IntPtr vfs, IntPtr zName);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr xNextSystemCallDelegate(IntPtr vfs, string zName);
+    public delegate IntPtr xNextSystemCallDelegate(IntPtr vfs, IntPtr zName);
 }
 
 // Define the VFS structure and methods you need here.
