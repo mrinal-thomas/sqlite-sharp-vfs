@@ -48,7 +48,7 @@ namespace Sqlite.VFS.DotNet
                 // Convert the pointer to the SQLiteVFS struct
                 vfs = Marshal.PtrToStructure<SQLiteVFS>(vfsPtr);
                 
-                // TODO: compare this with the find vfs from SQLitePCL!!!
+                // TODO: compare this with the find vfs from SQLitePCL
                 
                 // Use the fields of the vfs struct as needed
                 Console.WriteLine("VFS Name: " + vfs.zName); // Assuming zName is a char* in C
