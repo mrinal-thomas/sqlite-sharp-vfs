@@ -3,9 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace Sqlite.VFS.DotNet.SQLiteInterop;
 
-public partial class Registration: IDisposable
+public partial class Registration : IDisposable
 {
-    public HashSet<GCHandle> OpenHandles = new HashSet<GCHandle>();
+    public HashSet<SQLiteVFS> RegisteredVFS = new HashSet<SQLiteVFS>();
+    public HashSet<IntPtr> AllocatedMemory = new HashSet<IntPtr>();
+
     const string SQLiteDll = "e_sqlite3";
 
     //[LibraryImport(SQLiteDll)]
@@ -26,25 +28,53 @@ public partial class Registration: IDisposable
     [DllImport(SQLiteDll, CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr sqlite3_vfs_find(string zVfsName);
 
-    public void RegisterVFSStruct(object vfs, int makeDflt, IEnumerable<GCHandle> dependencyHandles)
+    public void RegisterVFSStruct(ISqliteVFS vfs, int makeDflt)
     {
-        GCHandle vfsHandle = GCHandle.Alloc(vfs, GCHandleType.Pinned);
-        
-        OpenHandles.Add(vfsHandle);
-        foreach (GCHandle handle in dependencyHandles)
+        SQLiteVFS vfsStructInManagedMem = new SQLiteVFS()
         {
-            OpenHandles.Add(handle);
-        }
+            // Basic properties
+            iVersion = vfs.iVersion,
+            szOsFile = vfs.szOsFile,
+            mxPathname = vfs.mxPathname,
+            zName = vfs.zName,
+            pAppData = vfs.pAppData,
 
-        IntPtr vfsPtr = GCHandle.ToIntPtr(vfsHandle);
-        sqlite3_vfs_register(vfsPtr, makeDflt);
+            // Function pointers 
+            xOpen = vfs.xOpen,
+            xDelete = vfs.xDelete,
+            xAccess = vfs.xAccess,
+            xFullPathname = vfs.xFullPathname,
+            xDlOpen = vfs.xDlOpen,
+            xDlError = vfs.xDlError,
+            xDlSym = vfs.xDlSym,
+            xDlClose = vfs.xDlClose,
+            xRandomness = vfs.xRandomness,
+            xSleep = vfs.xSleep,
+            xCurrentTime = vfs.xCurrentTime,
+            xGetLastError = vfs.xGetLastError,
+
+            // Version-2-and-later methods
+            xCurrentTimeInt64 = vfs.xCurrentTimeInt64,
+
+            // Version-3-and-later methods
+            xSetSystemCall = vfs.xSetSystemCall,
+            xGetSystemCall = vfs.xGetSystemCall,
+            xNextSystemCall = vfs.xNextSystemCall
+        };
+        RegisteredVFS.Add(vfsStructInManagedMem);
+
+        IntPtr vfsStructUnmanagedMem = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SQLiteVFS)));
+        Marshal.StructureToPtr(vfsStructInManagedMem, vfsStructUnmanagedMem, true);
+        sqlite3_vfs_register(vfsStructUnmanagedMem, makeDflt);
+
+        AllocatedMemory.Add(vfsStructUnmanagedMem);
     }
 
     public void Dispose()
     {
-        foreach (GCHandle handle in OpenHandles)
+        foreach (IntPtr memPtr in AllocatedMemory)
         {
-            handle.Free();
+            Marshal.FreeCoTaskMem(memPtr);
         }
     }
 }

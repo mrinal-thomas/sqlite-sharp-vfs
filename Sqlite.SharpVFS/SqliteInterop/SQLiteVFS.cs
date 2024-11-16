@@ -7,10 +7,10 @@ public class SQLiteVFSDelegates
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int xOpenDelegate(IntPtr vfs, IntPtr zName, IntPtr file, int flags, IntPtr pOutFlags);
-    
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int xDeleteDelegate(IntPtr vfs, IntPtr zName, int syncDir);
-    
+
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int xAccessDelegate(IntPtr vfs, IntPtr zName, int flags, IntPtr pResOut);
 
@@ -151,28 +151,29 @@ public struct SQLiteVFS
     /// </summary>
     public SQLiteVFSDelegates.xGetLastErrorDelegate xGetLastError;
 
-#region version-2-and-later-methods
+    #region version-2-and-later-methods
 
     /// <summary>
     /// Function pointer for xCurrentTimeInt64.
     /// </summary>
-    public IntPtr xCurrentTimeInt64;
-#endregion 
-#region version-3-and-later-methods
+    public SQLiteVFSDelegates.xCurrentTimeInt64Delegate xCurrentTimeInt64;
+
+    #endregion
+    #region version-3-and-later-methods
 
     /// <summary>
     /// Function pointer for xSetSystemCall.
     /// </summary>
-    public IntPtr xSetSystemCall;
+    public SQLiteVFSDelegates.xSetSystemCallDelegate xSetSystemCall;
 
     /// <summary>
     /// Function pointer for xGetSystemCall.
     /// </summary>
-    public IntPtr xGetSystemCall;
+    public SQLiteVFSDelegates.xGetSystemCallDelegate xGetSystemCall;
 
     /// <summary>
     /// Function pointer for xNextSystemCall.
     /// </summary>
-    public IntPtr xNextSystemCall;
-#endregion
+    public SQLiteVFSDelegates.xNextSystemCallDelegate xNextSystemCall;
+    #endregion
 }

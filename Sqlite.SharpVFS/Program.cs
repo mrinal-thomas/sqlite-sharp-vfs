@@ -1,78 +1,52 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Data.Sqlite;
 using Sqlite.VFS.DotNet.SQLiteInterop;
-using SQLitePCL;
 
 namespace Sqlite.VFS.DotNet
 {
     public class Program
     {
-[StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential)]
         private struct sqlitepcl_vfs
-		{
-			public int iVersion = 3;
-			public int szOsFile;
-			public int mxPathname;
-			public IntPtr pNext;
+        {
+            public int iVersion = 3;
+            public int szOsFile;
+            public int mxPathname;
+            public IntPtr pNext;
 
             [MarshalAs(UnmanagedType.LPUTF8Str)]
-			public string zName;
-			public IntPtr pAppData;
-			public IntPtr xOpen;
-			public SQLiteDeleteDelegate xDelete;
-			public IntPtr xAccess;
-			public IntPtr xFullPathname;
-			public IntPtr xDlOpen;
-			public IntPtr xDlError;
-			public IntPtr xDlSym;
-			public IntPtr xDlClose;
-			public IntPtr xRandomness;
-			public IntPtr xSleep;
-			public IntPtr xCurrentTime;
-			public IntPtr xGetLastError;
+            public string zName;
+            public IntPtr pAppData;
+            public IntPtr xOpen;
+            public SQLiteDeleteDelegate xDelete;
+            public IntPtr xAccess;
+            public IntPtr xFullPathname;
+            public IntPtr xDlOpen;
+            public IntPtr xDlError;
+            public IntPtr xDlSym;
+            public IntPtr xDlClose;
+            public IntPtr xRandomness;
+            public IntPtr xSleep;
+            public IntPtr xCurrentTime;
+            public IntPtr xGetLastError;
 
-			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-			public unsafe delegate int SQLiteDeleteDelegate(IntPtr pVfs, byte* zName, int syncDir);
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+            public unsafe delegate int SQLiteDeleteDelegate(IntPtr pVfs, byte* zName, int syncDir);
 
-            public sqlitepcl_vfs(){}
-		}
+            public sqlitepcl_vfs() { }
+        }
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-            // See https://aka.ms/new-console-template for more information
-            IntPtr vfsPtr = Registration.sqlite3_vfs_find("unix");
-            SQLiteVFS vfs;
-            if (vfsPtr != IntPtr.Zero)
-            {
-                // Convert the pointer to the SQLiteVFS struct
-                vfs = Marshal.PtrToStructure<SQLiteVFS>(vfsPtr);
-                
-                // TODO: compare this with the find vfs from SQLitePCL
-                
-                // Use the fields of the vfs struct as needed
-                Console.WriteLine("VFS Name: " + vfs.zName); // Assuming zName is a char* in C
-            }
+            // SQLitePCL.Batteries.Init();
 
-            SQLitePCL.Batteries.Init();
-            (SQLiteVFSShimInner shimVFS, object[] refs) = SQLiteVFSShim.New("unix", "my-custom-vfs");
+            using Registration vfsRegistration = new Registration();
 
-            int len = Marshal.SizeOf(typeof(SQLiteVFS));
-            int expectedMem = Marshal.SizeOf(typeof(sqlitepcl_vfs));
-            IntPtr vfs_mem = Marshal.AllocCoTaskMem(len);
-            try
-            {
-                Marshal.StructureToPtr(shimVFS._shimVFSImpl, vfs_mem, true);
-                Registration.sqlite3_vfs_register(vfs_mem, 1);
-
-                RunDbTest();
-            }
-            finally
-            {
-                Marshal.FreeCoTaskMem(vfs_mem);
-            }
-            // using Registration vfsRegistration = new Registration();
-            // vfsRegistration.RegisterVFSStruct(shimVFS, 0, []);
+            IntPtr unixVfsPtr = Registration.sqlite3_vfs_find("unix");
+            LoggerShimVFS loggerShimVFS = new LoggerShimVFS(unixVfsPtr);
+            vfsRegistration.RegisterVFSStruct(loggerShimVFS, 1);
+            GC.Collect();
+            RunDbTest();
         }
 
         private static void RunDbTest()
