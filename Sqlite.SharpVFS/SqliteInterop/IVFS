@@ -1,0 +1,120 @@
+using System;
+using System.Runtime.InteropServices;
+
+namespace Sqlite.VFS.DotNet.SQLiteInterop;
+
+
+public interface IVFS
+{
+    /// <summary>
+    /// Structure version number (currently 3).
+    /// </summary>
+    public int iVersion { get; }
+
+    /// <summary>
+    /// Size of subclassed sqlite3_file.
+    /// </summary>
+    public int szOsFile { get; }
+
+    /// <summary>
+    /// Maximum file pathname length.
+    /// </summary>
+    public int mxPathname { get; }
+
+    /// <summary>
+    /// Name of this virtual file system.
+    /// </summary>
+    public string? zName { get; }
+
+    /// <summary>
+    /// Pointer to application-specific data.
+    /// </summary>
+    public IntPtr pAppData { get; }
+
+    // Function pointers
+
+    /// <summary>
+    /// Function pointer for xOpen.
+    /// </summary>
+    public int xOpenDelegate(IntPtr vfs, IntPtr zName, IntPtr file, int flags, IntPtr pOutFlags);
+
+    /// <summary>
+    /// Function pointer for xDelete.
+    /// </summary>
+    public SQLiteVFSDelegates.xDeleteDelegate xDelete;
+
+    /// <summary>
+    /// Function pointer for xAccess.
+    /// </summary>
+    public SQLiteVFSDelegates.xAccessDelegate xAccess;
+
+    /// <summary>
+    /// Function pointer for xFullPathname.
+    /// </summary>
+    public SQLiteVFSDelegates.xFullPathnameDelegate xFullPathname;
+
+    /// <summary>
+    /// Function pointer for xDlOpen.
+    /// </summary>
+    public SQLiteVFSDelegates.xDlOpenDelegate xDlOpen;
+
+    /// <summary>
+    /// Function pointer for xDlError.
+    /// </summary>
+    public SQLiteVFSDelegates.xDlErrorDelegate xDlError;
+
+    /// <summary>
+    /// Function pointer for xDlSym.
+    /// </summary>
+    public SQLiteVFSDelegates.xDlSymDelegate xDlSym;
+
+    /// <summary>
+    /// Function pointer for xDlClose.
+    /// </summary>
+    public SQLiteVFSDelegates.xDlCloseDelegate xDlClose;
+
+    /// <summary>
+    /// Function pointer for xRandomness.
+    /// </summary>
+    public SQLiteVFSDelegates.xRandomnessDelegate xRandomness;
+
+    /// <summary>
+    /// Function pointer for xSleep.
+    /// </summary>
+    public SQLiteVFSDelegates.xSleepDelegate xSleep;
+
+    /// <summary>
+    /// Function pointer for xCurrentTime.
+    /// </summary>
+    public SQLiteVFSDelegates.xCurrentTimeDelegate xCurrentTime;
+
+    /// <summary>
+    /// Function pointer for xGetLastError.
+    /// </summary>
+    public SQLiteVFSDelegates.xGetLastErrorDelegate xGetLastError;
+
+    #region version-2-and-later-methods
+
+    /// <summary>
+    /// Function pointer for xCurrentTimeInt64.
+    /// </summary>
+    public IntPtr xCurrentTimeInt64 { get; }
+    #endregion
+    #region version-3-and-later-methods
+
+    /// <summary>
+    /// Function pointer for xSetSystemCall.
+    /// </summary>
+    public IntPtr xSetSystemCall { get; }
+
+    /// <summary>
+    /// Function pointer for xGetSystemCall.
+    /// </summary>
+    public IntPtr xGetSystemCall { get; }
+
+    /// <summary>
+    /// Function pointer for xNextSystemCall.
+    /// </summary>
+    public IntPtr xNextSystemCall { get; }
+    #endregion
+}
