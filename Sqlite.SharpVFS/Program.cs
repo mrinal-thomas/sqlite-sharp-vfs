@@ -1,40 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.Data.Sqlite;
 using Sqlite.VFS.DotNet.SQLiteInterop;
+using Sqlite.VFS.DotNet.SQLiteInterop.Test;
 
 namespace Sqlite.VFS.DotNet
 {
     public class Program
     {
-        [StructLayout(LayoutKind.Sequential)]
-        private struct sqlitepcl_vfs
-        {
-            public int iVersion = 3;
-            public int szOsFile;
-            public int mxPathname;
-            public IntPtr pNext;
-
-            [MarshalAs(UnmanagedType.LPUTF8Str)]
-            public string zName;
-            public IntPtr pAppData;
-            public IntPtr xOpen;
-            public SQLiteDeleteDelegate xDelete;
-            public IntPtr xAccess;
-            public IntPtr xFullPathname;
-            public IntPtr xDlOpen;
-            public IntPtr xDlError;
-            public IntPtr xDlSym;
-            public IntPtr xDlClose;
-            public IntPtr xRandomness;
-            public IntPtr xSleep;
-            public IntPtr xCurrentTime;
-            public IntPtr xGetLastError;
-
-            [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-            public unsafe delegate int SQLiteDeleteDelegate(IntPtr pVfs, byte* zName, int syncDir);
-
-            public sqlitepcl_vfs() { }
-        }
 
         public static void Main(string[] args)
         {
