@@ -6,6 +6,7 @@ namespace Sqlite.VFS.DotNet.SQLiteInterop;
 public partial class Registration : IDisposable
 {
     public HashSet<SQLiteVFS> RegisteredVFS = new HashSet<SQLiteVFS>();
+    public HashSet<SQLiteIOMethods> RegisteredIOMethods = new HashSet<SQLiteIOMethods>();
     public HashSet<IntPtr> AllocatedMemory = new HashSet<IntPtr>();
 
     const string SQLiteDll = "e_sqlite3";
@@ -28,7 +29,7 @@ public partial class Registration : IDisposable
     [DllImport(SQLiteDll, CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr sqlite3_vfs_find(string zVfsName);
 
-    public void RegisterVFSStruct(ISqliteVFS vfs, int makeDflt)
+    public void RegisterVFSStruct(ISQLiteVFS vfs, int makeDflt)
     {
         SQLiteVFS vfsStructInManagedMem = new SQLiteVFS()
         {
@@ -68,6 +69,44 @@ public partial class Registration : IDisposable
         sqlite3_vfs_register(vfsStructUnmanagedMem, makeDflt);
 
         AllocatedMemory.Add(vfsStructUnmanagedMem);
+    }
+
+    public IntPtr RegisterIOMethods(ISQLiteIOMethods ioMethods)
+    {
+        SQLiteIOMethods ioMethodsStructInManagedMem = new SQLiteIOMethods()
+        {
+            iVersion = ioMethods.iVersion,
+
+            // Function pointers for the I/O methods
+            xClose = ioMethods.xClose,
+            xRead = ioMethods.xRead,
+            xWrite = ioMethods.xWrite,
+            xTruncate = ioMethods.xTruncate,
+            xSync = ioMethods.xSync,
+            xFileSize = ioMethods.xFileSize,
+            xLock = ioMethods.xLock,
+            xUnlock = ioMethods.xUnlock,
+            xCheckReservedLock = ioMethods.xCheckReservedLock,
+            xFileControl = ioMethods.xFileControl,
+            xSectorSize = ioMethods.xSectorSize,
+            xDeviceCharacteristics = ioMethods.xDeviceCharacteristics,
+
+            // Version-2 methods
+            xShmMap = ioMethods.xShmMap,
+            xShmLock = ioMethods.xShmLock,
+            xShmBarrier = ioMethods.xShmBarrier,
+            xShmUnmap = ioMethods.xShmUnmap,
+
+            // Version-3 methods
+            xFetch = ioMethods.xFetch,
+            xUnfetch = ioMethods.xUnfetch
+        };
+        RegisteredIOMethods.Add(ioMethodsStructInManagedMem);
+
+        IntPtr ioMethodsStructUnmanagedMem = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(SQLiteIOMethods)));
+        Marshal.StructureToPtr(ioMethodsStructInManagedMem, ioMethodsStructUnmanagedMem, true);
+        AllocatedMemory.Add(ioMethodsStructUnmanagedMem);
+        return ioMethodsStructUnmanagedMem;
     }
 
     public void Dispose()

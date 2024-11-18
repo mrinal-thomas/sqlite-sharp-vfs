@@ -1,16 +1,22 @@
-using System;
 using System.Runtime.InteropServices;
 
-namespace Sqlite.VFS.DotNet.SQLiteInterop;
+namespace Sqlite.VFS.DotNet.SQLiteInterop.Test;
 
-public class LoggerShimVFS : ISqliteVFS
+public class LoggerShimVFS : ISQLiteVFS
 {
+    private struct IOMethodsInternal
+    {
+        public IntPtr IOMethodsPtr;
+    }
+
     IntPtr _underlyingVFSPtr;
     SQLiteVFS _underlyingVFS;
+    IntPtr _loggerShimIOMethods;
+    Dictionary<string, FileState> _files = new Dictionary<string, FileState>();
 
     public int iVersion => _underlyingVFS.iVersion;
 
-    public int szOsFile => _underlyingVFS.szOsFile;
+    public int szOsFile => Marshal.SizeOf(typeof(LoggerShimIOFile)) + _underlyingVFS.szOsFile;
 
     public int mxPathname => _underlyingVFS.szOsFile;
 
@@ -21,9 +27,15 @@ public class LoggerShimVFS : ISqliteVFS
     // xOpen Wrapper
     public int xOpen(IntPtr vfs, IntPtr zName, IntPtr file, int flags, IntPtr pOutFlags)
     {
-        int rc = _underlyingVFS.xOpen(_underlyingVFSPtr, zName, file, flags, pOutFlags);
+        string nameStr = Marshal.PtrToStringAnsi(zName)!;
+        
+        FileState fileState = new FileState(_loggerShimIOMethods);
+        Marshal.StructureToPtr(fileState.IOFile, file, false);
+        _files[nameStr] = fileState;
 
-        string? nameStr = Marshal.PtrToStringAnsi(zName);
+        IntPtr underlyingFile = file + Marshal.SizeOf(typeof(LoggerShimIOFile));
+        int rc = _underlyingVFS.xOpen(_underlyingVFSPtr, zName, underlyingFile, flags, pOutFlags);
+
         Console.WriteLine($"Call to xOpen file {nameStr} with flags 0x{flags:X8} returned {rc}");
 
         return rc;
@@ -155,9 +167,10 @@ public class LoggerShimVFS : ISqliteVFS
         return _underlyingVFS.xNextSystemCall(_underlyingVFSPtr, zName);
     }
 
-    public LoggerShimVFS(IntPtr underlyingVFSPtr)
+    public LoggerShimVFS(IntPtr underlyingVFSPtr, IntPtr loggerShimIOMethods)
     {
         _underlyingVFSPtr = underlyingVFSPtr;
         _underlyingVFS = Marshal.PtrToStructure<SQLiteVFS>(underlyingVFSPtr);
+        _loggerShimIOMethods = loggerShimIOMethods;
     }
 }

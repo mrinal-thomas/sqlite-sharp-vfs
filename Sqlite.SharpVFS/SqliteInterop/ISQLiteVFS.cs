@@ -1,9 +1,6 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace Sqlite.VFS.DotNet.SQLiteInterop;
 
-public interface ISqliteVFS
+public interface ISQLiteVFS
 {
     /// <summary>
     /// Structure version number (currently 3).

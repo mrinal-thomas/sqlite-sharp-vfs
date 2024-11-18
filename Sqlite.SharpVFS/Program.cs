@@ -13,9 +13,11 @@ namespace Sqlite.VFS.DotNet
             // SQLitePCL.Batteries.Init();
 
             using Registration vfsRegistration = new Registration();
+            LoggerShimIOMethods ioMethods = new LoggerShimIOMethods();
+            IntPtr ioMethodsPtr = vfsRegistration.RegisterIOMethods(ioMethods);
 
             IntPtr unixVfsPtr = Registration.sqlite3_vfs_find("unix");
-            LoggerShimVFS loggerShimVFS = new LoggerShimVFS(unixVfsPtr);
+            LoggerShimVFS loggerShimVFS = new LoggerShimVFS(unixVfsPtr, ioMethodsPtr);
             vfsRegistration.RegisterVFSStruct(loggerShimVFS, 1);
             GC.Collect();
             RunDbTest();
@@ -53,6 +55,7 @@ namespace Sqlite.VFS.DotNet
             }
 
             connection.Close();
+            Console.WriteLine("Done");
         }
     }
 }

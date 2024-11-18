@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.InteropServices;
 
 namespace Sqlite.VFS.DotNet.SQLiteInterop;
@@ -42,70 +41,70 @@ public struct SQLiteIOMethods
     /// <summary>
     /// Function pointer for xClose.
     /// </summary>
-    public IntPtr xClose;
+    public SQLiteIODelegates.xCloseDelegate xClose;
 
     /// <summary>
     /// Function pointer for xRead.
     /// </summary>
-    public IntPtr xRead;
+    public SQLiteIODelegates.xReadDelegate xRead;
 
     /// <summary>
     /// Function pointer for xWrite.
     /// </summary>
-    public IntPtr xWrite;
+    public SQLiteIODelegates.xWriteDelegate xWrite;
 
     /// <summary>
     /// Function pointer for xTruncate.
     /// </summary>
-    public IntPtr xTruncate;
+    public SQLiteIODelegates.xTruncateDelegate xTruncate;
 
     /// <summary>
     /// Function pointer for xSync.
     /// </summary>
-    public IntPtr xSync;
+    public SQLiteIODelegates.xSyncDelegate xSync;
 
     /// <summary>
     /// Function pointer for xFileSize.
     /// </summary>
-    public IntPtr xFileSize;
+    public SQLiteIODelegates.xFileSizeDelegate xFileSize;
 
     /// <summary>
     /// Function pointer for xLock.
     /// </summary>
-    public IntPtr xLock;
+    public SQLiteIODelegates.xLockDelegate xLock;
 
     /// <summary>
     /// Function pointer for xUnlock.
     /// </summary>
-    public IntPtr xUnlock;
+    public SQLiteIODelegates.xUnlockDelegate xUnlock;
 
     /// <summary>
     /// Function pointer for xCheckReservedLock.
     /// </summary>
-    public IntPtr xCheckReservedLock;
+    public SQLiteIODelegates.xCheckReservedLockDelegate xCheckReservedLock;
 
     /// <summary>
     /// Function pointer for xFileControl.
     /// </summary>
-    public IntPtr xFileControl;
+    public SQLiteIODelegates.xFileControlDelegate xFileControl;
 
     /// <summary>
     /// Function pointer for xSectorSize.
     /// </summary>
-    public IntPtr xSectorSize;
+    public SQLiteIODelegates.xSectorSizeDelegate xSectorSize;
 
     /// <summary>
     /// Function pointer for xDeviceCharacteristics.
     /// </summary>
-    public IntPtr xDeviceCharacteristics;
+    public SQLiteIODelegates.xDeviceCharacteristicsDelegate xDeviceCharacteristics;
 
     // Version 2 methods
-    public IntPtr xShmMap;
-    public IntPtr xShmLock;
-    public IntPtr xShmBarrier;
-    public IntPtr xShmUnmap;
+    public SQLiteIODelegates.xShmMapDelegate xShmMap;
+    public SQLiteIODelegates.xShmLockDelegate xShmLock;
+    public SQLiteIODelegates.xShmBarrierDelegate xShmBarrier;
+    public SQLiteIODelegates.xShmUnmapDelegate xShmUnmap;
 
     // Version 3 methods
-    public IntPtr xFetch;
-    public IntPtr xUnfetch;
+    public SQLiteIODelegates.xFetchDelegate xFetch;
+    public SQLiteIODelegates.xUnfetchDelegate xUnfetch;
 }
