@@ -5,6 +5,14 @@ VisualStudioVersion = 25.0.1706.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.SharpVFS", "Sqlite.SharpVFS\Sqlite.SharpVFS.csproj", "{32CE4DF1-6134-4188-8E54-43EBF3FF45C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.SharpVFS.Metrics", "Sqlite.SharpVFS.Metrics\Sqlite.SharpVFS.Metrics.csproj", "{16ADCBAB-0B3C-437B-8067-3DDF89F474A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.SharpVFS.DebugShim", "Sqlite.SharpVFS.DebugShim\Sqlite.SharpVFS.DebugShim.csproj", "{B7436426-554A-49E5-A9BA-405BC527EFBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.SharpVFS.Metrics.Test", "Sqlite.SharpVFS.Metrics.Test\Sqlite.SharpVFS.Metrics.Test.csproj", "{5E6EBC3F-DC6B-4231-A756-B6E5E5DC1BB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.SharpVFS.Test", "Sqlite.SharpVFS.Test\Sqlite.SharpVFS.Test.csproj", "{FADA7C94-6FD6-4708-88A9-35C9A856B4FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +23,22 @@ Global
 		{32CE4DF1-6134-4188-8E54-43EBF3FF45C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32CE4DF1-6134-4188-8E54-43EBF3FF45C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32CE4DF1-6134-4188-8E54-43EBF3FF45C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16ADCBAB-0B3C-437B-8067-3DDF89F474A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16ADCBAB-0B3C-437B-8067-3DDF89F474A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16ADCBAB-0B3C-437B-8067-3DDF89F474A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16ADCBAB-0B3C-437B-8067-3DDF89F474A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7436426-554A-49E5-A9BA-405BC527EFBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7436426-554A-49E5-A9BA-405BC527EFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7436426-554A-49E5-A9BA-405BC527EFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7436426-554A-49E5-A9BA-405BC527EFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E6EBC3F-DC6B-4231-A756-B6E5E5DC1BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E6EBC3F-DC6B-4231-A756-B6E5E5DC1BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E6EBC3F-DC6B-4231-A756-B6E5E5DC1BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E6EBC3F-DC6B-4231-A756-B6E5E5DC1BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADA7C94-6FD6-4708-88A9-35C9A856B4FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADA7C94-6FD6-4708-88A9-35C9A856B4FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADA7C94-6FD6-4708-88A9-35C9A856B4FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADA7C94-6FD6-4708-88A9-35C9A856B4FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

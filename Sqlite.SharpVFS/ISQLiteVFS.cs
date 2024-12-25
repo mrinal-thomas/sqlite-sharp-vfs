@@ -28,6 +28,7 @@ public interface ISQLiteVFS
     public IntPtr pAppData { get; }
 
     // Function signatures for methods in the VFS interface
+    #region version-1-methods
 
     /// <summary>
     /// Function signature for xOpen.
@@ -89,6 +90,7 @@ public interface ISQLiteVFS
     /// </summary>
     public int xGetLastError(IntPtr vfs, int n, IntPtr zErrMsg);
 
+    #endregion
     #region version-2-and-later-methods
 
     /// <summary>
@@ -97,7 +99,6 @@ public interface ISQLiteVFS
     public int xCurrentTimeInt64(IntPtr vfs, IntPtr pOut);
 
     #endregion
-
     #region version-3-and-later-methods
 
     /// <summary>

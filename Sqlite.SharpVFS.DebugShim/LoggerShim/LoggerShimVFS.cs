@@ -4,11 +4,6 @@ namespace Sqlite.VFS.DotNet.SQLiteInterop.Test;
 
 public class LoggerShimVFS : ISQLiteVFS
 {
-    private struct IOMethodsInternal
-    {
-        public IntPtr IOMethodsPtr;
-    }
-
     IntPtr _underlyingVFSPtr;
     SQLiteVFS _underlyingVFS;
     IntPtr _loggerShimIOMethods;
