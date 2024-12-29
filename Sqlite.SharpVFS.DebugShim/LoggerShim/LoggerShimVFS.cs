@@ -7,15 +7,15 @@ public class LoggerShimVFS : ISQLiteVFS
     IntPtr _underlyingVFSPtr;
     SQLiteVFS _underlyingVFS;
     IntPtr _loggerShimIOMethods;
-    Dictionary<string, FileState> _files = new Dictionary<string, FileState>();
+    Dictionary<string, LoggerFileState> _files = new Dictionary<string, LoggerFileState>();
 
     public int iVersion => _underlyingVFS.iVersion;
 
-    public int szOsFile => Marshal.SizeOf(typeof(LoggerShimIOFile)) + _underlyingVFS.szOsFile;
+    public int szOsFile => Marshal.SizeOf(typeof(LoggerShimFile)) + _underlyingVFS.szOsFile;
 
-    public int mxPathname => _underlyingVFS.szOsFile;
+    public int mxPathname => _underlyingVFS.mxPathname;
 
-    public string? zName => "my-custom-vfs";
+    public string? zName => "logger-shim-vfs";
 
     public IntPtr pAppData => _underlyingVFS.pAppData;
 
@@ -24,11 +24,11 @@ public class LoggerShimVFS : ISQLiteVFS
     {
         string nameStr = Marshal.PtrToStringAnsi(zName)!;
         
-        FileState fileState = new FileState(_loggerShimIOMethods);
+        LoggerFileState fileState = new LoggerFileState(_loggerShimIOMethods);
         Marshal.StructureToPtr(fileState.IOFile, file, false);
         _files[nameStr] = fileState;
 
-        IntPtr underlyingFile = file + Marshal.SizeOf(typeof(LoggerShimIOFile));
+        IntPtr underlyingFile = file + Marshal.SizeOf(typeof(LoggerShimFile));
         int rc = _underlyingVFS.xOpen(_underlyingVFSPtr, zName, underlyingFile, flags, pOutFlags);
 
         Console.WriteLine($"Call to xOpen file {nameStr} with flags 0x{flags:X8} returned {rc}");

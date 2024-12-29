@@ -2,16 +2,16 @@ using System.Runtime.InteropServices;
 
 namespace Sqlite.VFS.DotNet.SQLiteInterop.Test;
 
-public class FileState
+public class LoggerFileState
 {
-    public delegate FileState GetFileState();
+    public delegate LoggerFileState GetFileState();
 
-    public LoggerShimIOFile IOFile;
+    public LoggerShimFile IOFile;
     public Dictionary<string, int> MethodCallCounts { get; set; } = new Dictionary<string, int>();
 
-    public FileState(IntPtr ioMethodsPtr)
+    public LoggerFileState(IntPtr ioMethodsPtr)
     {
-        IOFile = new LoggerShimIOFile
+        IOFile = new LoggerShimFile
         {
             ShimIOMethods = ioMethodsPtr,
             GetManagedCodeState = () => this
@@ -19,11 +19,11 @@ public class FileState
     }
 }
 
-public struct LoggerShimIOFile
+public struct LoggerShimFile
 {
     public IntPtr ShimIOMethods;
 
-    public FileState.GetFileState GetManagedCodeState;
+    public LoggerFileState.GetFileState GetManagedCodeState;
 }
 
 public class LoggerShimIOMethods : ISQLiteIOMethods
@@ -32,12 +32,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xCheckReservedLock(IntPtr filePtr, out int result)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(filePtr);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(filePtr);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xCheckReservedLock), 0) + 1;
         fileState.MethodCallCounts[nameof(xCheckReservedLock)] = callCount;
 
-        IntPtr underlyingFilePtr = filePtr + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = filePtr + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -48,12 +48,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xClose(IntPtr file)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xClose), 0) + 1;
         fileState.MethodCallCounts[nameof(xClose)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -64,12 +64,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xDeviceCharacteristics(IntPtr file)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xDeviceCharacteristics), 0) + 1;
         fileState.MethodCallCounts[nameof(xDeviceCharacteristics)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -80,12 +80,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xFileControl(IntPtr file, int operation, IntPtr argument)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xFileControl), 0) + 1;
         fileState.MethodCallCounts[nameof(xFileControl)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -96,12 +96,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xFileSize(IntPtr file, out long size)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xFileSize), 0) + 1;
         fileState.MethodCallCounts[nameof(xFileSize)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -112,12 +112,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xLock(IntPtr file, int lockType)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xLock), 0) + 1;
         fileState.MethodCallCounts[nameof(xLock)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -128,12 +128,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xRead(IntPtr file, IntPtr buffer, int amount, long offset)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xRead), 0) + 1;
         fileState.MethodCallCounts[nameof(xRead)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -144,12 +144,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xSectorSize(IntPtr file)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xSectorSize), 0) + 1;
         fileState.MethodCallCounts[nameof(xSectorSize)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -160,12 +160,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xSync(IntPtr file, int flags)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xSync), 0) + 1;
         fileState.MethodCallCounts[nameof(xSync)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -176,12 +176,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xTruncate(IntPtr file, long size)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xTruncate), 0) + 1;
         fileState.MethodCallCounts[nameof(xTruncate)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -192,12 +192,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xUnlock(IntPtr file, int lockType)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xUnlock), 0) + 1;
         fileState.MethodCallCounts[nameof(xUnlock)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
@@ -208,12 +208,12 @@ public class LoggerShimIOMethods : ISQLiteIOMethods
 
     public int xWrite(IntPtr file, IntPtr buffer, int amount, long offset)
     {
-        LoggerShimIOFile shimIOFile = Marshal.PtrToStructure<LoggerShimIOFile>(file);
-        FileState fileState = shimIOFile.GetManagedCodeState();
+        LoggerShimFile shimIOFile = Marshal.PtrToStructure<LoggerShimFile>(file);
+        LoggerFileState fileState = shimIOFile.GetManagedCodeState();
         int callCount = fileState.MethodCallCounts.GetValueOrDefault(nameof(xWrite), 0) + 1;
         fileState.MethodCallCounts[nameof(xWrite)] = callCount;
 
-        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimIOFile>();
+        IntPtr underlyingFilePtr = file + Marshal.SizeOf<LoggerShimFile>();
         IntPtr underlyingFileIOMethodsPtr = Marshal.PtrToStructure<IntPtr>(underlyingFilePtr);
         SQLiteIOMethods underlyingFileIOMethods = Marshal.PtrToStructure<SQLiteIOMethods>(underlyingFileIOMethodsPtr);
 
