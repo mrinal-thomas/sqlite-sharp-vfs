@@ -5,7 +5,17 @@ namespace Sqlite.VFS.DotNet.SQLiteInterop;
 
 public partial class Registration : IDisposable
 {
+
+    /// <summary>
+    /// The managed memory VFS methods structs must be kept in memory until the VFS is done being used,
+    /// to prevent the delegates from being cleaned up by the GC.
+    /// </summary>
     public HashSet<SQLiteVFS> RegisteredVFS = new HashSet<SQLiteVFS>();
+    
+    /// <summary>
+    /// The managed memory IO methods structs must be kept in memory until the VFS is done being used,
+    /// to prevent the delegates from being cleaned up by the GC.
+    /// </summary>
     public HashSet<SQLiteIOMethods> RegisteredIOMethods = new HashSet<SQLiteIOMethods>();
     public HashSet<IntPtr> AllocatedMemory = new HashSet<IntPtr>();
 

@@ -39,7 +39,6 @@ public class PrometheusShimVFS : ISQLiteVFS
 
     public nint pAppData => _underlyingVFS.pAppData;
 
-    // xOpen Wrapper
     public int xOpen(IntPtr vfs, IntPtr zName, IntPtr file, int flags, IntPtr pOutFlags)
     {
         string nameStr = Marshal.PtrToStringAnsi(zName)!;
@@ -55,25 +54,22 @@ public class PrometheusShimVFS : ISQLiteVFS
         return _underlyingVFS.xOpen(_underlyingVFSPtr, zName, underlyingFile, flags, pOutFlags);
     }
 
-    // xDelete Wrapper
     public int xDelete(IntPtr vfs, IntPtr zName, int syncDir)
     {
         string? nameStr = Marshal.PtrToStringAnsi(zName);
-        fnCallCounter.WithLabels(nameof(xOpen), nameStr ?? "null").Inc(1);
+        fnCallCounter.WithLabels(nameof(xDelete), nameStr ?? "null").Inc(1);
         
         return _underlyingVFS.xDelete(_underlyingVFSPtr, zName, syncDir);;
     }
 
-    // xAccess Wrapper
     public int xAccess(IntPtr vfs, IntPtr zName, int flags, IntPtr pResOut)
     {
         string? nameStr = Marshal.PtrToStringAnsi(zName);
-        fnCallCounter.WithLabels(nameof(xOpen), nameStr ?? "null").Inc(1);
+        fnCallCounter.WithLabels(nameof(xAccess), nameStr ?? "null").Inc(1);
 
         return _underlyingVFS.xAccess(_underlyingVFSPtr, zName, flags, pResOut);
     }
 
-    // xFullPathname Wrapper
     public int xFullPathname(IntPtr vfs, IntPtr zName, int nOut, IntPtr zOut)
     {
         string? nameStr = Marshal.PtrToStringAnsi(zName);
@@ -82,64 +78,56 @@ public class PrometheusShimVFS : ISQLiteVFS
         return _underlyingVFS.xFullPathname(_underlyingVFSPtr, zName, nOut, zOut);
     }
 
-    // xDlOpen Wrapper
     public IntPtr xDlOpen(IntPtr vfs, IntPtr zFilename)
     {
         string? filenameStr = Marshal.PtrToStringAnsi(zFilename);
-        fnCallCounter.WithLabels(nameof(xOpen), filenameStr ?? "null").Inc(1);
+        fnCallCounter.WithLabels(nameof(xDlOpen), filenameStr ?? "null").Inc(1);
 
         return _underlyingVFS.xDlOpen(_underlyingVFSPtr, zFilename);
     }
 
-    // xDlError Wrapper
     public void xDlError(IntPtr vfs, int nByte, IntPtr zErrMsg)
     {
         fnCallCounter.WithLabels(nameof(xOpen), "null").Inc(1);
         _underlyingVFS.xDlError(_underlyingVFSPtr, nByte, zErrMsg);
     }
 
-    // xDlSym Wrapper
     public IntPtr xDlSym(IntPtr vfs, IntPtr pDlopen, IntPtr zSymbol)
     {
+        fnCallCounter.WithLabels(nameof(xDlSym), "null").Inc(1);
         return _underlyingVFS.xDlSym(_underlyingVFSPtr, pDlopen, zSymbol);
     }
 
-    // xDlClose Wrapper
     public void xDlClose(IntPtr vfs, IntPtr pDlopen)
     {
         fnCallCounter.WithLabels(nameof(xDlClose), "null").Inc(1);
         _underlyingVFS.xDlClose(_underlyingVFSPtr, pDlopen);
     }
 
-    // xRandomness Wrapper
     public int xRandomness(IntPtr vfs, int nByte, IntPtr zOut)
     {
         fnCallCounter.WithLabels(nameof(xRandomness), "null").Inc(1);
         return _underlyingVFS.xRandomness(_underlyingVFSPtr, nByte, zOut);
     }
 
-    // xSleep Wrapper
     public int xSleep(IntPtr vfs, int microseconds)
     {
-        fnCallCounter.WithLabels(nameof(xRandomness), "null").Inc(1);
+        fnCallCounter.WithLabels(nameof(xSleep), "null").Inc(1);
         return _underlyingVFS.xSleep(_underlyingVFSPtr, microseconds);
     }
 
-    // xCurrentTime Wrapper
     public int xCurrentTime(IntPtr vfs, IntPtr pNum)
     {
         fnCallCounter.WithLabels(nameof(xCurrentTime), "null").Inc(1);
         return _underlyingVFS.xCurrentTime(_underlyingVFSPtr, pNum);
     }
 
-    // xGetLastError Wrapper
     public int xGetLastError(IntPtr vfs, int nBuf, IntPtr zBuf)
     {
         fnCallCounter.WithLabels(nameof(xGetLastError), "null").Inc(1);
         return _underlyingVFS.xGetLastError(_underlyingVFSPtr, nBuf, zBuf);
     }
 
-    // Version 2 and 3 methods (direct forwarding)
     public int xCurrentTimeInt64(IntPtr vfs, IntPtr pOut)
     {
         fnCallCounter.WithLabels(nameof(xCurrentTimeInt64), "null").Inc(1);
